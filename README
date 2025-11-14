@@ -1,0 +1,95 @@
+# TPI – Programacion II  
+## Sistema de gestion de vehiculos y seguros vehiculares
+
+Trabajo Practico Integrador de la materia **Programacion II**, realizado con **Apache NetBeans** y **MySQL**.
+
+El objetivo del proyecto es implementar una arquitectura por capas (entities, dao, service, menu) que permita gestionar:
+
+- Vehiculos
+- Seguros vehiculares asociados
+
+---
+
+## Tecnologias utilizadas
+
+- **Lenguaje:** Java SE [version_java]
+- **IDE:** Apache NetBeans [version_netbeans]
+- **JDK:** [version_jdk]
+- **Base de datos:** MySQL [version_mysql]
+- **Cliente SQL:** MySQL Workbench [version_workbench]
+- **Conector JDBC:** `mysql-connector-j-[version_conector].jar`
+
+> Nota: reemplazar `[version_...]` con las versiones reales que se usaron en el entorno donde se desarrollo y probo el trabajo.
+
+---
+
+## Estructura del proyecto
+
+Proyecto NetBeans: `TPI_Vehiculos`
+
+Paquetes principales:
+
+- `config`
+  - `DatabaseConnection.java`  
+    Clase encargada de abrir la conexion JDBC con MySQL (DriverManager, URL, usuario y contrasenia).
+
+- `entities`
+  - `Base.java`  
+    Clase base con atributos `id` y `eliminado` (borrado logico).
+  - `Vehiculo.java`  
+    Representa un vehiculo con dominio, marca, modelo, anio, nroChasis, etc.
+  - `Cobertura.java`  
+    Enum con los tipos de cobertura de seguro (RC, TERCEROS, TODO_RIESGO).
+  - `SeguroVehicular.java`  
+    Representa un seguro con aseguradora, numero de poliza, cobertura y fecha de vencimiento.
+
+- `dao`
+  - `GenericDao<T, ID>`  
+    Interfaz generica con operaciones CRUD.
+  - `VehiculoDao`, `SeguroVehicularDao`  
+    Interfaces especificas.
+  - `VehiculoDaoImpl`, `SeguroVehicularDaoImpl`  
+    Implementaciones concretas con JDBC (INSERT, SELECT, UPDATE, DELETE / borrado logico).
+
+- `service`
+  - `VehiculoService`, `SeguroVehicularService`  
+    Interfaces de la capa de servicio.
+  - `VehiculoServiceImpl`, `SeguroVehicularServiceImpl`  
+    Llaman a los DAO y manejan la logica de negocio / transacciones.
+
+- `menu`
+  - `MenuPrincipal.java`  
+    Clase con el `main` y un menu de consola para interactuar con el sistema.
+
+---
+
+## Configuracion de la base de datos
+
+1. Crear una base de datos en MySQL, por ejemplo:
+
+   ```sql
+   CREATE DATABASE tpi_vehiculos;
+   USE tpi_vehiculos;
+
+
+CREATE TABLE vehiculo (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    eliminado BOOLEAN NOT NULL DEFAULT FALSE,
+    dominio VARCHAR(20) NOT NULL,
+    marca VARCHAR(50) NOT NULL,
+    modelo VARCHAR(50),
+    anio INT,
+    nro_chasis VARCHAR(50)
+);
+
+CREATE TABLE seguro_vehicular (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    eliminado BOOLEAN NOT NULL DEFAULT FALSE,
+    aseguradora VARCHAR(100) NOT NULL,
+    nro_poliza VARCHAR(50) NOT NULL,
+    cobertura VARCHAR(20) NOT NULL,
+    vencimiento DATE NOT NULL
+);
+private static final String URL = "jdbc:mysql://localhost:3306/tpi_vehiculos";
+private static final String USER = "[tu_usuario_mysql]";
+private static final String PASSWORD = "[tu_contrasenia_mysql]";
